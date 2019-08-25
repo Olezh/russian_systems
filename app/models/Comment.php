@@ -33,18 +33,6 @@ class Comment
     }
 
     /**
-     * @return mixed
-     */
-    public static function getAlltItems()
-    {
-        $db = \app\Db::instance();
-
-        $sql = 'SELECT * FROM ' . static::TABLE;
-
-        return $db->query($sql, Comment::class);
-    }
-
-    /**
      * В случае успешного запроса к БД присваивает data['id'] номер назначенный базой данных
      */
     public function save()
@@ -64,7 +52,7 @@ class Comment
         INSERT INTO ' . static::TABLE . ' (' . implode(', ', $columns) . ') 
         VALUES (' . implode(', ', $params) . ')
         ';
-        $db = \App\Db::instance();
+        $db = \app\Db::instance();
         $result = $db->execute($sql, $data);
         if ($result !== false) {
             $this->id = $result;
@@ -79,5 +67,13 @@ class Comment
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
+    }
+
+    public static function entityGenerator($id)
+    {
+        $db = \app\Db::instance();
+        $sql = 'SELECT * FROM ' . static::TABLE . ' WHERE topic_id=:id';
+        $generator = $db->queryEach($sql, static::class, [':id' => $id]);
+        return $generator;
     }
 }

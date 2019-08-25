@@ -42,20 +42,42 @@ class Db
         }
         return $sth->fetchAll(\PDO::FETCH_CLASS, $class);
     }
+
     /**
      * @param $sql
-     * @param array $params
+     * @param array $data
      * @return string
      * @throws \Exception
      */
-    public function execute($sql, array $params = [])
+    public function execute($sql, array $data = [])
     {
         try {
             $sth = $this->dbh->prepare($sql);
-            $sth->execute($params);
+            $sth->execute($data);
             return $this->dbh->lastInsertId();
         } catch (\PDOException $e) {
             throw new \Exception ($e->getMessage());
+        }
+    }
+
+    /**
+     * @param $sql
+     * @param string $class
+     * @param array $data
+     * @return \Generator
+     * @throws \Exception
+     */
+    public function queryEach($sql, string $class, array $data = [])
+    {
+        try {
+            $sth = $this->dbh->prepare($sql);
+            $sth->execute($data);
+            $sth->setFetchMode(\PDO::FETCH_CLASS, $class);
+        } catch (\PDOException $e) {
+            throw new \Exception ($e->getMessage());
+        }
+        while ($row = $sth->fetch()) {
+            yield $row;
         }
     }
 }
