@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Topic <?php echo $_GET['ID'] ?? 'Default'; ?></title>
+</head>
+<body>
+<header>
+</header>
+<section>
+    <?php echo $this->tree; ?>
+    <?php echo $this->form(); ?>
+</section>
+<footer>
+    <p>Copyright 2019</p>
+</footer>
+<script src="templates/assets/jquery-3.4.1.min.js">
+</script>
+<script>
+    $(document).on("click", ".submit", function () {
+        var parent = $(this).parent();
+        var message = $(this).prev().val();
+        var id = $(this).attr("data");
+        var data = {parent_id: id, topic_id: "<?php echo $_GET['ID'] ?? null; ?>", body: message};
+
+        $.ajax({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+            },
+            url: '/',
+            type: 'POST',
+            data: data,
+            contentType: 'application/json; charset=utf-8',
+            success: function (responce) {
+                if (id === "") {
+
+                    parent.prev().append('<li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + responce + '">Опубликовать</button></div></li>');
+
+                } else {
+                    if (parent.next().is("ul")) {
+                        parent.next().append('<li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + responce + '">Опубликовать</button></div></li>');
+                    } else {
+                        parent.parent().append('<ul><li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + responce + '">Опубликовать</button></div></li></ul>');
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

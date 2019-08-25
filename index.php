@@ -8,28 +8,16 @@
 
 require_once __DIR__ . '/autoload.php';
 
-$topicName = $_GET['ID'] ?? 'Home';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $controller = new \app\controllers\Api();
+} elseif(isset($_GET['ID'])) {
+    $controller = new \app\controllers\Comments();
+} else {
+    $controller = new \app\controllers\Home();
+}
 
-//$conf = new \app\Config();
-
-//$db = \app\Db::instance();
-
-
-$result =  (new \app\models\Comment())::getAlltItems();
-
-var_dump($result);
-
-$comm = new \app\models\Comment();
-
-$comm->fill([
-    'parent_id' => 3,
-    'body' => 'super good 3'
-]);
-
-$comm->save();
-
-$result =  (new \app\models\Comment())::getAlltItems();
-
-var_dump($result);
-
-//var_dump($conf);
+try {
+    $controller->actionDefault();
+} catch (\Exception $e) {
+    (new \app\Controllers\Error())->actionDefault($e->getMessage());
+}
