@@ -31,16 +31,16 @@
             type: 'POST',
             data: data,
             contentType: 'application/json; charset=utf-8',
-            success: function (responce) {
+            success: function (response) {
                 if (id === "") {
 
-                    parent.prev().append('<li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + responce + '">Опубликовать</button></div></li>');
+                    parent.prev().append('<li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + response + '">Опубликовать</button></div></li>');
 
                 } else {
                     if (parent.next().is("ul")) {
-                        parent.next().append('<li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + responce + '">Опубликовать</button></div></li>');
+                        parent.next().append('<li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + response + '">Опубликовать</button></div></li>');
                     } else {
-                        parent.parent().append('<ul><li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + responce + '">Опубликовать</button></div></li></ul>');
+                        parent.parent().append('<ul><li>' + message + '<div class="box"><input type="text"><button class="submit" data="' + response + '">Опубликовать</button></div></li></ul>');
                     }
                 }
             }
